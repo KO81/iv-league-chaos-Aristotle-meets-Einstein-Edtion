@@ -209,7 +209,7 @@ function arr_rst(){hold=[...d.a];g1=[...d.b];
 	}while(a5.length!=0){result=a5.pop()+result
 	}return await TfB64(BtS(result)).catch(er=>{return getIgnore(phrase+str.substring(str.length-10))
 	}).finally(res=>{return res});
-}async function disorder(str,phrase,salt='',sign=0){if(!str.length||!phrase.length)return null;if(con)void testPhase(str,phrase,salt,sign);
+}async function disorder(str,phrase,salt='',sign=0){if(!str.length||!phrase.length)return null;/* if(con)void testPhase(str,phrase,salt,sign); */
 	let iv=sign?IV():'',a0=SnC(StB(await TtB64(str))),a1=Array.isArray(phrase)?phrase:[...await pwprime(phrase+iv+salt)].reverse(),a2=0,a3,a4,a5=[],a6=a1.length,result='';
 	if(salt.length){g1=chaoticG1(g1,calle(plain(salt.padEnd(32,'e'))))
 	}if(iv.length){g1=chaoticG1(g1,iv)
