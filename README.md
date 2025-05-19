@@ -2,7 +2,7 @@
 Explore a Cryptographic cpu Nightmare
 
 # 🔥 IV League Cryptography 
-# Aristotle meets Einstein Edtion
+# Aristotle meets Einstein Edition
 *"Steps to reproduce `f(x) = lim (n→∞) [ (x ⊕ π) • (φ mod n) ]` are barely an option."*  
 
 ## Conclusion: The Cryptographic Omega Point
