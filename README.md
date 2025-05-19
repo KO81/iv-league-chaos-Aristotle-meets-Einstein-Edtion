@@ -1,4 +1,4 @@
-# iv-league-chaos Aristotle meets Einstein Edtion
+# iv-league-chaos Aristotle meets Einstein Edition
 Explore a Cryptographic cpu Nightmare
 
 # 🔥 IV League Cryptography 
