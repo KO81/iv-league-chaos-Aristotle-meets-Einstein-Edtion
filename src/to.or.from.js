@@ -1,8 +1,33 @@
 import{b as BtS}from'./binary.switcher.js';
-import{a,d,beta,irritator,IV,plain,hex,gDec,gEnc}from'./json.js';
+import{a,d,beta,hex,plain,IV,Matrix,randInt,repAll,addEr}from'./json.js';
 /*inspired by "Seek the depths, but never the end."*/
-/*inspired by "Seek the depths, but never the end."*/
-class NuclearBase64{
+let fakeCache=new Map();
+class base85{/* credits AlttiRi  */
+	#pow2=7225;#pow3=614125;#pow4=52200625;
+	getMap(){return this.cTM(d.h);
+	}cTM(charset){let ua=new Uint8Array(85),i=0;
+		for(i;i<85;i++){ua[i]=charset.charAt(i).charCodeAt(0)}return ua;
+	}gRM(mOC){let rMp=new Uint8Array(128);
+		for(let [num,charCode] of Object.entries(mOC)){rMp[charCode]=parseInt(num)}return rMp;
+	}encode(ua){ua=headUp(ua);
+		let cM=this.getMap(),remain=ua.length%4,l5l=remain?remain+1:0,length=Math.ceil(ua.length*5/4),tGt=new Uint8Array(length);
+		let dw=new DataView(ua.buffer,ua.byteOffset,ua.byteLength),to=Math.trunc(ua.length/4),i=0,k;
+		for(i;i<to;i++){let num=dw.getUint32(4*i);
+			for(k=4;k>=0;k--){tGt[k+i*5]=cM[num%85];num=Math.trunc(num/85)}
+		}if(remain){
+			let lPIndex=Math.trunc(ua.length/4)*4,lP=Uint8Array.from([...ua.slice(lPIndex),0,0,0]);
+			let os=tGt.length-l5l-1,dw=new DataView(lP.buffer),num=dw.getUint32(0),vl,ix,i=4;
+			for(i;i>=0;i--){vl=cM[num%85];num=Math.trunc(num/85);if(i<l5l){ix=os+i+1;tGt[ix]=vl}}
+		}return headDown(tGt);
+	}decode(b85){
+		let map=this.getMap(),rMp=this.gRM(map),b85ab=headUp(b85),pad=(5-(b85ab.length%5))%5,ints=new Uint8Array((Math.ceil(b85ab.length/5)*4)-pad),dw=new DataView(ints.buffer),i=0;
+		for(;i<b85ab.length/5-1;i++){
+			let c1=rMp[b85ab[i*5+4]],c2=rMp[b85ab[i*5+3]]*85,c3=rMp[b85ab[i*5+2]]*this.#pow2,c4=rMp[b85ab[i*5+1]]*this.#pow3,c5=rMp[b85ab[i*5]]*this.#pow4;dw.setUint32(i*4,c1+c2+c3+c4+c5);
+		}let lCh=map[map.length-1],lP=new Uint8Array([...b85ab.slice(i*5),lCh,lCh,lCh,lCh]);dw=new DataView(lP.buffer);
+		let c1=rMp[lP[4]],c2=rMp[lP[3]]*85,c3=rMp[lP[2]]*this.#pow2,c4=rMp[lP[1]]*this.#pow3,c5=rMp[lP[0]]*this.#pow4,j=0;dw.setUint32(0,c1+c2+c3+c4+c5);
+		for(j;j<4-pad;j++){ints[i*4+j]=lP[j]}return headDown(ints);
+	}
+}class NuclearBase64{
 	static #BOM=new Uint8Array([0xFF,0xFE,0x00,0x00]);
 	static encodeBOMsave(str){return btoa(String.fromCharCode(...new Uint8Array([...this.#BOM,...this.stringToUTF32Bytes(str)])));
     }static decodeBOMsave(str){
@@ -21,6 +46,30 @@ class NuclearBase64{
         for(i;i<cp.length;i++){cp[i]=vw.getUint32(i*4,littleEndian);
         }return String.fromCodePoint(...cp);
     }
+}function sanity(arr,num,ex=''){
+  	if(ex){num=(num^parseInt(ex.slice(0,4),16))%arr.length;
+  	}return[new Matrix([...d.b].rotate(num)).build(),new Matrix(arr,Math.round(Math.sqrt(num))).build()];
+}function coupler(str,encryptMode=1){
+  let separator='|',chunks=[],i=0;
+  for(i;i<str.length;i+=4){chunks.push(str.slice(i,i+4));
+  }if(encryptMode){// Shuffle: Reverse chunks and join with separator
+    return chunks.reverse().join(separator);
+  }else{// Deshuffle: Split and reverse back
+    return str.split(separator).reverse().join('');
+  }
+}function getIgnore(phrase){let str,fT;
+	if(fakeCache.has(phrase))return fakeCache.get(phrase);
+	if(typeof loremEpsum!=='function'){
+		fT=["Error: Invalid token. Contact support if this persists.","Session expired. Please re-authenticate.",
+			"Lorem ipsum dolor sit amet, consectetur adipiscing elit.","404: Data not found. Check your parameters.",
+			"System busy. Try again later."];
+		str=fT[randInt(0,fT.length)];
+	}else{str=loremEpsum(randInt(10,1e2),{wordsPerUnit:randInt(4,12),numbersPerUnit:randInt(0,2)})
+	}fakeCache.set(phrase,str);return str;
+}function calle(arr,os=14){let a0,a1=[];
+	if(!Array.isArray(arr))arr=headUp(JSON.stringify(arr));
+	for(a0 of headUp(BtS([...arr].slice(os,os+0x48).join(''))).map(p=>p=p%0x10)){a1.push([...d.d][a0])
+	}return a1.join('').substring(0,32)
 }function chaotic(g1,ex){
 	let a0=ex.match(/.{2}/g).map(b=>parseInt(b,16))||[0xde,0xad],a1=[...g1],a2=[...d.d],a3,a4,a5,d0=g1.length;
 	for(d0--;d0>-1;d0-=2){
@@ -28,47 +77,52 @@ class NuclearBase64{
 		a2=a2.rotate(a3[0]+a3[1],!(beta(ex[d0])>>a3[1]));a4=[a1[a3[1]],a1[a3[0]]];a1[a3[0]]=a4[0];a1[a3[1]]=a4[1];a1=a1.rotate(beta(ex[d0])>>a3[0],a3[1]<a3[0])
 	}return a1//g1=a1
 }async function norm(input){
-    if(typeof input==='function'){return await comp(chaotic(input.toString().split(''),input.toString()).slice(0,32).join('')).join('').padEnd(32,'q');
+	async function IO(str){return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-512',headUp(str)))).map((q)=>q.toString(16).padStart(2,'0')).join('');
+	}if(typeof input==='function'){return await IO(await comp(chaotic(input.toString().split(''),input.toString()).slice(0,32).join('')).join('').padEnd(32,'q'));
     }if(Array.isArray(input)){btoa(headUp(BtS((input.reverse().join('')))).map(p=>((p%67)||(p/3))^5).join('').substring(0,7e2)).substring(0,7e2);
-    	return btoa(headUp(BtS((input.reverse().join('')))).map(p=>((p%67)||(p/3))^5).join('').substring(0,7e2)).substring(0,7e2);
+    	return btoa(headUp(BtS(input.reverse().join('')||input.reverse().join(''))).map(p=>((p%67)||(p/3))^5).join('').substring(0,7e2)).substring(0,7e2);
     }if(input===null||input===undefined){return addSmokescreen(IV(512));
-    }btoa(chaotic(headUp(input.padStart(8,'q').split('')),String(input).padEnd(14,'e')).reverse().join(''));
-    return btoa(chaotic(headUp(input.padStart(8,'q').split('')),String(input).padEnd(14,'e')).reverse().join(''));
+    }return await IO(btoa(chaotic(headUp(input.padStart(8,'q').split('')),String(input).padEnd(14,'e')).reverse().join('')));
 }function isBase64(str){try{return btoa(atob(str))===str}catch{return false}
 }function b64EncUTF16(str){
     return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,function toSolidBytes(match,p1){return String.fromCharCode('0x'+p1)}));
 }function b64DecUTF16(str){
     return decodeURIComponent(atob(str).split('').map(function(c){return '%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)}).join(''));
 }function headUp(txt){return new TextEncoder().encode(txt);
+}function headDown(txt){return new TextDecoder().decode(txt);
 }async function comp(str){let chunks=[],chunk;
-	try{for await (chunk of new Blob([str]).stream().pipeThrough(new CompressionStream('gzip'))){chunks.push(chunk)
-		}return await cu8a(chunks)
-	}catch(er){return new TextEncoder().encode(str)}
+	try{for await (chunk of new Blob([str]).stream().pipeThrough(new CompressionStream('gzip'))){chunks.push(chunk)}return await cu8a(chunks)
+	}catch(er){addEr('comp',er);return headUp(str)}
 }async function decomp(str){let chunks=[],chunk;
-	try{for await (chunk of new Blob([str]).stream().pipeThrough(new DecompressionStream('gzip'))){chunks.push(chunk)
-  		}return new TextDecoder().decode(await cu8a(chunks))
-	}catch(er){return new TextDecoder().decode(str)}
+	try{for await (chunk of new Blob([str]).stream().pipeThrough(new DecompressionStream('gzip'))){chunks.push(chunk)}return headDown(await cu8a(chunks))
+	}catch(er){addEr('decomp',er);return headDown(str)}
 }async function cu8a(ui8as){return new Uint8Array(await new Blob(ui8as).arrayBuffer());
 }function uTtB64(txt){return btoa(headUp(txt).join(' '));
-}function uTfB64(txt){return new TextDecoder().decode(new Uint8Array(atob(txt).split(' ').map(x=>x=parseInt(x))));
+}function uTfB64(txt){return headDown(new Uint8Array(atob(txt).split(' ').map(x=>x=parseInt(x))));
+}async function serialize(str){return repAll(await TtStr(new base85().encode(str)),1);
+}async function deserialize(str){return new base85().decode(await TfStr(repAll(str,0)));
 }async function TtStr(txt){return String.fromCharCode(...await comp(txt));
 }async function TfStr(txt){return await decomp(Uint8Array.from(txt,c=>c.charCodeAt(0)));
-}async function TtB64utf32(txt){/* utf-32 */
+}async function TtB64utf32(txt){/* utf-32 only advanced usage be carefull */
 	try{let a0=await TtStr(NuclearBase64.encode(await TtStr(txt)));
 		if(await TfStr(NuclearBase64.decode(await TfStr(a0)))!==txt)a1=true;
 		return a0
-	}catch{return NuclearBase64.encode(await TtStr(txt))}
-}async function TfB64utf32(txt){/* utf-32 */
+	}catch(er){addEr('TtB64utf32 =>',er);return NuclearBase64.encode(await TtStr(txt))}
+}async function TfB64utf32(txt){/* utf-32 only advanced usage be carefull */
 	try{let a0=await TfStr(NuclearBase64.decode(await TfStr(txt)))
 		if(await TtStr(NuclearBase64.encode(await TtStr(a0)))!==txt)a1=true;
 		return a0
-	}catch{return await TfStr(NuclearBase64.decode(txt))}
+	}catch(er){addEr('TfB64utf32 =>',er);return await TfStr(NuclearBase64.decode(txt))}
 }async function TtB64utf16(txt){return b64EncUTF16(await TtStr(txt));/* utf-16 */
 }async function TfB64utf16(txt){return await TfStr(b64DecUTF16(txt));/* utf-16 */
-}async function TtB64(txt){return btoa(await TtStr(txt));/* utf-8 */
-}async function TfB64(txt){return await TfStr(atob(txt));/* utf-8 */
-}async function TtHex(txt){return plain(await TtStr(txt));
-}async function TfHex(txt){return await TfStr(hex(txt));
+}async function TtB64(txt){return b64EncUTF16(txt);
+	return btoa(await TtStr(txt));/* utf-8 */
+}async function TfB64(txt){return b64DecUTF16(txt)
+	return await TfStr(atob(txt));/* utf-8 */
+}async function TtB85(txt){return new base85().encode(await TtStr(txt));/* utf-32 */
+}async function TfB85(txt){return await TfStr(new base85().decode(txt));/* utf-32 */
+}async function TtHex(txt){return plain(await TtStr(txt));/* base10 */
+}async function TfHex(txt){return await TfStr(hex(txt));/* base10 */
 }function mobius(input,max=0x100){/*Apply Möbius transformation in finite field*/
     let a=Math.sinh(input[0]),b=Math.log2(input[1])*a,c=Math.sqrt(input[2])^1,d=Math.round(Math.cos((a^c)+input[3]))*b;
     return input.map(x=>Math.round(Math.pow((a*x+b)/(c*x+d),2))|0xA2%max);
@@ -116,4 +170,4 @@ class NuclearBase64{
 	constructor(str,phrase){this.str=str;this.phrase=phrase;
 	}entangle(){return enx(this.str,this.phrase)
 	}detangle(){return dex(this.str,this.phrase)}
-};export{uTtB64,uTfB64,TtStr,TfStr,TtB64utf16,TfB64utf16,TfB64utf32,TtB64utf32,TtB64,TfB64,TtHex,TfHex,mutateAllArrays,headUp,tangled,mobius,addSmokescreen,norm}
+};export{uTtB64,uTfB64,TtStr,TfStr,TtB64utf16,TfB64utf16,TfB64utf32,TtB64utf32,TtB64,TfB64,TtB85,TfB85,TtHex,TfHex,mutateAllArrays,headUp,headDown,tangled,mobius,addSmokescreen,norm,base85,b64DecUTF16,b64EncUTF16,sanity,getIgnore,calle,serialize,deserialize,coupler}
