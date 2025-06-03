@@ -1,5 +1,5 @@
 import{b as BtS,c as StB}from'./src/binary.switcher.js';
-import{reorder as reo,disorder as dis}from'./src/out.of.order.js';
+import{reorder as reo,disorder as dis}from'./out.of.order.js';
 import{TtB64,TfB64,TtB85,TfB85,mutateAllArrays,headUp,headDown,tangled,mobius,addSmokescreen,norm,base85,sanity,getIgnore,calle}from'./src/to.or.from.js';
 import{a,d,beta,BsTB,irritator,_rotate,SnC,hex,plain,IV,EinsteinHeadspin,repAll,randInt,addEr,clErr,erRtn,cm,ct}from'./src/json.js';
 "use strict";/*inspired by "Seek the depths, but never the end."
