@@ -1,6 +1,6 @@
 import{b as BtS,c as StB}from'./src/binary.switcher.js';
 import{a,d,beta,irritator,SnC,BsTB,IV,plain,EinsteinHeadspin}from'/src/json.js';
-import{mutateAllArrays,headUp,calle}from'/src/to.or.from.js';/*
+import{mutateAllArrays,headUp,calle,chaotic}from'/src/to.or.from.js';/*
 author: Christian Feilert
 version: 1.d.a
 type: expanded/beta
@@ -29,8 +29,9 @@ function arr_rst(){hold=[...d.a];g1=[...d.b]
 		}}
 	}return new TextDecoder().decode(new Uint8Array(a2.slice(2,3)[0][Math.abs(parseInt(a2.slice(0,1),16)%0x80+1^1)||1]>0?a4.map((v,i)=>i%2?v^0xBEEF:v^0xCAFE).map(p=>p=p%0xff):a4.map(p=>p=p%0xff)))
 }async function gather(arg){arr_rst();hold=hold.rotate(arg.length+beta(arg.substring(-1)));
-	let a0=a.i,a1=await h_get([...headUp(arg.padStart(3,'f'))].rotate(beta(arg[arg.length-2])^3,beta(arg[arg.length-1])).join('').padStart(0x80,a0[plain(arg[1])])),a2,a3,a4,a5,a6,a7=BsTB,a8=arg.length,a9;
-	if(a8<=3){arg=IV(32)};a2=await hr(a1,arg);a1=headUp(a2.substring(4,20));
+	let b0=headUp(arg),b1=chaotic([Math.max(...b0),Math.min(...b0),b0.reduce((sum,el)=>sum+el,0),arg.length],calle(plain(arg.padEnd(32,'d'))));
+	let a0=a.i,a1=await h_get(chaotic([...b0,...b1],calle(plain(headUp(arg).reverse().join('')))).map(p=>p%0x100).rotate(beta(arg[arg.length-2])^3,beta(arg[arg.length-1])).join('').padStart(0x80,a0[plain(arg[1])])),a2,a3,a4,a5,a6,a7=BsTB,a8=arg.length,a9;
+	if(a8<=3){arg=IV(randInt(32,58))};a2=await hr(a1,arg);a1=headUp(a2.substring(4,20));
 	a3=a1[beta(a2[a1[Math.sqrt(beta(a2[2])**a1[4])|0xF5%a1.length]%a2.length])|0xBEAF%a1.length]^beta(a2[1]);
 	a4=a1[Math.sqrt(Math.sinh(a1[1]**beta(arg[3])))&a1.length]^13;
 	a5=a1[(beta(a2[a2.length-2])*Math.sinh(a1[beta(a2[0])%a1.length])>>>a1[Math.sin(beta(arg[0])**a4)&a1.length]|0xBEAF)%a1.length]^3;
