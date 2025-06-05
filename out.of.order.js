@@ -1,6 +1,6 @@
 import{b as BtS,c as StB}from'./src/binary.switcher.js';
-import{a,d,beta,irritator,SnC,BsTB,IV,plain,EinsteinHeadspin}from'/src/json.js';
-import{mutateAllArrays,headUp,calle,chaotic}from'/src/to.or.from.js';/*
+import{a,d,beta,irritator,SnC,BsTB,IV,plain,EinsteinHeadspin}from'./src/json.js';
+import{mutateAllArrays,headUp,calle,chaotic}from'./src/to.or.from.js';/*
 author: Christian Feilert
 version: 1.d.a
 type: expanded/beta
